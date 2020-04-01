@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ShellUtils;
+import com.blankj.utilcode.util.ThreadUtils;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class SystemInfo {
     }
 
     public static String[] getAppsContainHide(){
-        ShellUtils.CommandResult result=ShellUtils.execCmd("pm list package", DeviceUtils.isDeviceRooted());
+        ShellUtils.CommandResult result=ShellUtils.execCmd("pm list package",false);
         String[] ss=result.successMsg.replace("package:","").split("\n");
         return ss;
     }

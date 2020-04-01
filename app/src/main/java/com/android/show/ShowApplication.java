@@ -52,7 +52,9 @@ public class ShowApplication extends Application {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("OkGo");
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
         loggingInterceptor.setColorLevel(Level.INFO);
-        builder.addInterceptor(loggingInterceptor);
+        if(BuildConfig.DEBUG){
+            builder.addInterceptor(loggingInterceptor);
+        }
 
         builder.readTimeout(OkGo.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(OkGo.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);

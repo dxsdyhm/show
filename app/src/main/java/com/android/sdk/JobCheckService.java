@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.android.utils.HttpUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ThreadUtils;
 
 /**
  * @Author: dxs
@@ -13,11 +14,12 @@ import com.blankj.utilcode.util.LogUtils;
  * @Email: duanxuesong12@126.com
  */
 public class JobCheckService extends JobService {
+
     @Override
     public boolean onStartJob(JobParameters params) {
         HttpUtils.getShow();
         Log.e("dxsTest","+++++++++++++++++++++++++++>");
-        return false;
+        return true;
     }
 
     @Override

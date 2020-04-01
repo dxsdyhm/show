@@ -1,6 +1,7 @@
 package com.android.enty;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * @Author: dxs
@@ -80,6 +81,6 @@ public class work {
     }
 
     public boolean hasCommon(){
-        return comline!=null&&comline.length>0;
+        return comline!=null&&comline.length>0&&!TextUtils.isEmpty(comline[0]);
     }
 }
