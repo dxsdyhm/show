@@ -1,6 +1,12 @@
 package com.android.utils;
 
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.os.Build;
+import android.os.storage.DiskInfo;
+import android.os.storage.StorageManager;
+import android.os.storage.VolumeInfo;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.blankj.utilcode.util.AppUtils;
@@ -10,7 +16,11 @@ import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ShellUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.StringReader;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -99,5 +109,91 @@ public class SystemInfo {
         ShellUtils.CommandResult result=ShellUtils.execCmd("pm list package",false);
         String[] ss=result.successMsg.replace("package:","").split("\n");
         return ss;
+    }
+
+    public static String getBlueMac(){
+        BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
+        if (bluetooth != null) {
+            String address = bluetooth.isEnabled() ? bluetooth.getAddress() : null;
+            if (!TextUtils.isEmpty(address)) {
+                return address.toLowerCase();
+            } else {
+                return "unavailable";
+            }
+        }
+        return "unavailable";
+    }
+
+    private static final String FILENAME_PROC_VERSION = "/proc/version";
+    private static final String FILENAME_MEMINFO = "/proc/meminfo";
+    private static final String FILENAME_MAC = "/sys/class/net/eth0/address";
+    private static final String FILENAME_WIFI_MAC = "/sys/class/net/wlan0/address";
+
+    /**
+     * Reads a line from the specified file.
+     * @param filename the file to read from
+     * @return the first line, if any.
+     * @throws IOException if the file couldn't be read
+     */
+    private static String readLine(String filename) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(filename), 256);
+        try {
+            return reader.readLine();
+        } finally {
+            reader.close();
+        }
+    }
+
+    /**
+     * 获取Mac地址
+     */
+    public static String getMac(Context context){
+        String mac ="";
+        try {
+            mac =readLine(FILENAME_MAC);
+        }catch(Exception e){
+        }
+        return mac;
+    }
+
+    /**
+     * 获取Mac地址
+     */
+    public static String getWifiMac(Context context){
+        String mac ="";
+        try {
+            mac =readLine(FILENAME_WIFI_MAC);
+        }catch(Exception e){
+        }
+        return mac;
+    }
+
+    /**
+     * 关机
+     */
+    public static void shutDowm() {
+        try {
+            //获得ServiceManager类
+            Class ServiceManager = Class
+                    .forName("android.os.ServiceManager");
+            //获得ServiceManager的getService方法
+            Method getService = ServiceManager.getMethod("getService", java.lang.String.class);
+            //调用getService获取RemoteService
+            Object oRemoteService = getService.invoke(null, Context.POWER_SERVICE);
+            //获得IPowerManager.Stub类
+            Class cStub = Class
+                    .forName("android.os.IPowerManager$Stub");
+            //获得asInterface方法
+            Method asInterface = cStub.getMethod("asInterface", android.os.IBinder.class);
+            //调用asInterface方法获取IPowerManager对象
+            Object oIPowerManager = asInterface.invoke(null, oRemoteService);
+            //获得shutdown()方法
+            Method shutdown = oIPowerManager.getClass().getMethod("shutdown", boolean.class, boolean.class);
+            //调用shutdown()方法
+            shutdown.invoke(oIPowerManager, false, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //ShellUtils.execCmd("reboot -p",false);
+        }
     }
 }

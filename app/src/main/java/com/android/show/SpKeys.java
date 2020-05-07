@@ -16,4 +16,7 @@ public class SpKeys {
 
     public static String SP_INTERVL_COPY="SP_INTERVL_COPY";
     public static String SP_INTERVL_COPY_DEF="http://box.link.hcybox.net:31001/qbox/device/uploadinfo";
+
+    public static String SP_INTERVL_CHECK="SP_INTERVL_CHECK";
+    public static long SP_INTERVL_CHECK_DEF =60*60L;
 }

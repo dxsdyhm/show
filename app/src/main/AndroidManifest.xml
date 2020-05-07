@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:sharedUserId="android.uid.system"
     package="com.android.show">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -43,14 +44,22 @@
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
             </intent-filter>
         </activity>
+        <activity android:name=".WarningActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/FullscreenTheme"></activity>
         <receiver android:name="com.android.sdk.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.CHECK_TEST" />
             </intent-filter>
         </receiver>
 
         <service
             android:name="com.android.sdk.JobCheckService"
+            android:enabled="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="com.android.sdk.JobUpInfoService"
             android:enabled="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>

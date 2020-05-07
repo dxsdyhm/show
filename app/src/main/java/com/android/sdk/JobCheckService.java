@@ -5,8 +5,6 @@ import android.app.job.JobService;
 import android.util.Log;
 
 import com.android.utils.HttpUtils;
-import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ThreadUtils;
 
 /**
  * @Author: dxs
@@ -17,14 +15,12 @@ public class JobCheckService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters params) {
-        HttpUtils.getShow();
-        Log.e("dxsTest","+++++++++++++++++++++++++++>");
+        HttpUtils.checkDevice();
         return true;
     }
 
     @Override
     public boolean onStopJob(JobParameters params) {
-        Log.e("dxsTest","-------------------------->");
         return false;
     }
 }

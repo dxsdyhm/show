@@ -3,4 +3,6 @@
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">Please press the home button to return to the desktop</string>
+    <string name="shutdown_tips">Your device is not authorized and will shut down automatically!!!</string>
+    <string name="warning_tips">Your device is not authorized</string>
 </resources>

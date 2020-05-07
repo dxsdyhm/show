@@ -5,8 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import com.android.show.CheckTask;
 import com.android.show.ShowApplication;
+import com.android.show.ShutdownTask;
+import com.android.utils.HttpUtils;
 import com.android.utils.SceduHelper;
+import com.blankj.utilcode.util.ThreadUtils;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: dxs
@@ -15,6 +21,7 @@ import com.android.utils.SceduHelper;
  */
 public class BootReceiver extends BroadcastReceiver {
     static final String ACTION = "android.intent.action.BOOT_COMPLETED";
+    static final String ACTION_TEST = "android.intent.action.CHECK_TEST";
 
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ACTION)) {
@@ -23,6 +30,9 @@ public class BootReceiver extends BroadcastReceiver {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            ThreadUtils.executeBySingleWithDelay(new CheckTask(),3, TimeUnit.MINUTES);
+        }else if(intent.getAction().equals(ACTION_TEST)){
+            HttpUtils.checkDevice();
         }
     }
 }

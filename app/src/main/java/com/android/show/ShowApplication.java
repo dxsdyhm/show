@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.android.utils.SceduHelper;
 import com.blankj.utilcode.util.EncryptUtils;
+import com.blankj.utilcode.util.LanguageUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
@@ -15,6 +16,7 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -67,14 +69,14 @@ public class ShowApplication extends Application {
         builder.sslSocketFactory(sslParams1.sSLSocketFactory, sslParams1.trustManager);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.put("commonHeaderKey1", "commonHeaderValue1");    //header不支持中文，不允许有特殊字符
+        headers.put("language", LanguageUtils.getCurrentLocale().getLanguage());    //header不支持中文，不允许有特殊字符
         HttpParams params = new HttpParams();
         params.put("commonParamsKey1", "commonParamsValue1");     //param支持中文,直接传,不要自己编码
 
         OkGo.getInstance().init(this)                       //必须调用初始化
                 .setOkHttpClient(builder.build())               //建议设置OkHttpClient，不设置将使用默认的
-                .setRetryCount(3);                           //全局统一超时重连次数，默认为三次，那么最差的情况会请求4次(一次原始请求，三次重连请求)，不需要可以设置为0
-//                .addCommonHeaders(headers)                      //全局公共头
+                .setRetryCount(3)                         //全局统一超时重连次数，默认为三次，那么最差的情况会请求4次(一次原始请求，三次重连请求)，不需要可以设置为0
+                .addCommonHeaders(headers);                      //全局公共头
 //                .addCommonParams(params);                       //全局公共参数
     }
 }
