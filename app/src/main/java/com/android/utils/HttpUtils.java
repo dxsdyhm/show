@@ -46,7 +46,6 @@ import java.io.File;
 public class HttpUtils {
     private static int errorcount = 0;
     private static int CODE_SHOUTDOWM=10002;
-    private static int CHECK_SHOUTDOWM=12000;
     private static int CODE_TIPS=10003;
     private static String CheckUrl="https://tvbox.hcybox.net:31443/api/v1/device/license/check";
 
@@ -148,7 +147,7 @@ public class HttpUtils {
                         }else {
                             Intent intent=new Intent();
                             intent.setClass(ShowApplication.getContext(), WarningActivity.class);
-                            if(checkResponse.getCode()==CHECK_SHOUTDOWM||checkResponse.getCode()==CODE_SHOUTDOWM){
+                            if(checkResponse.getCode()==CODE_SHOUTDOWM){
                                 //shutdowm
                                 intent.putExtra("code",1);
                                 ActivityUtils.startActivity(intent);

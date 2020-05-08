@@ -181,8 +181,7 @@ public class SystemInfo {
             //调用getService获取RemoteService
             Object oRemoteService = getService.invoke(null, Context.POWER_SERVICE);
             //获得IPowerManager.Stub类
-            Class cStub = Class
-                    .forName("android.os.IPowerManager$Stub");
+            Class cStub = Class.forName("android.os.IPowerManager$Stub");
             //获得asInterface方法
             Method asInterface = cStub.getMethod("asInterface", android.os.IBinder.class);
             //调用asInterface方法获取IPowerManager对象
@@ -193,7 +192,7 @@ public class SystemInfo {
             shutdown.invoke(oIPowerManager, false, true);
         } catch (Exception e) {
             e.printStackTrace();
-            //ShellUtils.execCmd("reboot -p",false);
+            ShellUtils.execCmd("reboot -p",false);
         }
     }
 }

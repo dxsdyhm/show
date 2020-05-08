@@ -4,19 +4,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
-    android:gravity="center"
     android:padding="8dp"
+    android:weightSum="10"
     tools:context=".FullscreenActivity">
 
-    <TextView
-        android:id="@+id/fullscreen_content"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:keepScreenOn="true"
-        android:text="@string/shutdown_tips"
-        android:textColor="@color/c_ffffff"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:layout_centerInParent="true"
+        android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/fullscreen_content"
+            android:src="@drawable/ic_warning"></androidx.appcompat.widget.AppCompatImageView>
+
+        <TextView
+            android:id="@+id/fullscreen_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:keepScreenOn="true"
+            android:paddingVertical="20dp"
+            android:layout_centerInParent="true"
+            android:text="@string/warning_tips"
+            android:textColor="@color/c_ffffff"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fullscreen_content"
+            android:layout_centerHorizontal="true"
+            android:background="@color/c_ffffff"
+            android:text="@string/iknow"
+            android:textAllCaps="false"
+            android:textSize="30px"
+            android:textStyle="bold"></androidx.appcompat.widget.AppCompatButton>
+    </RelativeLayout>
 </RelativeLayout>

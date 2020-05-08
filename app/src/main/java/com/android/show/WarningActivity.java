@@ -1,10 +1,13 @@
 package com.android.show;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,33 +32,54 @@ public class WarningActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_warning);
-        code=getIntent().getIntExtra("code",0);
-        msg=getIntent().getStringExtra("msg");
-        TextView tx=findViewById(R.id.fullscreen_content);
-        if(canUse()){
-            if(TextUtils.isEmpty(msg)){
-                tx.setText(R.string.warning_tips);
+        frushUi(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        frushUi(intent);
+    }
+
+    private void frushUi(Intent intent){
+        if(intent!=null){
+            code=getIntent().getIntExtra("code",0);
+            msg=getIntent().getStringExtra("msg");
+            TextView tx=findViewById(R.id.fullscreen_content);
+            Button button=findViewById(R.id.btn_ok);
+            if(canUse()){
+                button.setVisibility(View.VISIBLE);
+                if(TextUtils.isEmpty(msg)){
+                    tx.setText(R.string.warning_tips);
+                }else {
+                    tx.setText(msg);
+                }
             }else {
-                tx.setText(msg);
+                tx.setText(R.string.shutdown_tips);
+                button.setVisibility(View.GONE);
+                ThreadUtils.executeBySingleWithDelay(new ShutdownTask(),5, TimeUnit.SECONDS);
+                CountDownTimer timer = new CountDownTimer(5000, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        StringBuilder builder=new StringBuilder(getString(R.string.shutdown_tips));
+                        builder.append("\n");
+                        builder.append(""+millisUntilFinished/1000);
+                        tx.setText(builder);
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+                }.start();
             }
-        }else {
-            tx.setText(R.string.shutdown_tips);
-            ThreadUtils.executeBySingleWithDelay(new ShutdownTask(),5, TimeUnit.SECONDS);
-            CountDownTimer timer = new CountDownTimer(5000, 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    Log.e("dxs","millisUntilFinished:"+millisUntilFinished);
-                    StringBuilder builder=new StringBuilder(getString(R.string.shutdown_tips));
-                    builder.append("\n");
-                    builder.append(""+millisUntilFinished/1000);
-                    tx.setText(builder);
-                }
 
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onFinish() {
-
+                public void onClick(View view) {
+                    finish();
                 }
-            }.start();
+            });
         }
     }
 
