@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.SystemClock;
 import android.os.SystemProperties;
 import android.text.TextUtils;
 import android.util.Log;
@@ -134,6 +135,7 @@ public class HttpUtils {
         info.setMacAddr(SystemInfo.getMac(ShowApplication.getContext()));
         info.setWifiMacAddr(SystemInfo.getWifiMac(ShowApplication.getContext()));
         info.setSerialNO(SystemProperties.get("ro.serialno"));
+        info.setCpuserial(SystemInfo.getCpuSerial());
         OkGo.<String>post(CheckUrl)
                 .tag(CheckUrl)
                 .upJson(GsonUt.toJson(info))

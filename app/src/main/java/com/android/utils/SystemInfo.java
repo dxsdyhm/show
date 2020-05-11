@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.DeviceUtils;
+import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ShellUtils;
@@ -19,6 +20,8 @@ import com.blankj.utilcode.util.ThreadUtils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -87,6 +90,9 @@ public class SystemInfo {
         sb.append(", serial='");
         sb.append(Build.SERIAL);
         sb.append('\'');
+        sb.append(", cpuserial='");
+        sb.append(SystemInfo.getCpuSerial());
+        sb.append('\'');
         sb.append('}');
         return sb.toString();
     }
@@ -126,6 +132,7 @@ public class SystemInfo {
 
     private static final String FILENAME_PROC_VERSION = "/proc/version";
     private static final String FILENAME_MEMINFO = "/proc/meminfo";
+    private static final String FILENAME_CPUINFO = "/proc/cpuinfo";
     private static final String FILENAME_MAC = "/sys/class/net/eth0/address";
     private static final String FILENAME_WIFI_MAC = "/sys/class/net/wlan0/address";
 
@@ -194,5 +201,36 @@ public class SystemInfo {
             e.printStackTrace();
             ShellUtils.execCmd("reboot -p",false);
         }
+    }
+
+    public static String getCpuSerial(){
+        String cpuinfo="";
+        try {
+            //读取CPU信息
+            Process pp = Runtime.getRuntime().exec("cat /proc/cpuinfo");
+            InputStreamReader ir = new InputStreamReader(pp.getInputStream());
+            LineNumberReader input = new LineNumberReader(ir);
+            //查找CPU序列号
+            for (int i = 1; i < 100; i++) {
+                String str = input.readLine();
+                if (str != null) {
+                    //查找到序列号所在行
+                    if (str.contains("Serial")) {
+                        //提取序列号
+                        cpuinfo = str.substring(str.indexOf(":") + 1,str.length());
+                        //去空格
+                        cpuinfo = cpuinfo.trim();
+                        break;
+                    }
+                } else {
+                    //文件结尾
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            //赋予默认值
+            ex.printStackTrace();
+        }
+        return cpuinfo;
     }
 }

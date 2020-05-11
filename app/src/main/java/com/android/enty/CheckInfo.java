@@ -16,15 +16,17 @@ public class CheckInfo {
     private String wifiMacAddr="";
     private String macAddr="";
     private String bluetoothAddr="";
+    private String cpuserial="";
 
     public CheckInfo() {
     }
 
-    public CheckInfo(String serialNO, String wifiMacAddr, String macAddr, String bluetoothAddr) {
+    public CheckInfo(String serialNO, String wifiMacAddr, String macAddr, String bluetoothAddr, String cpuserial) {
         this.serialNO = serialNO;
         this.wifiMacAddr = wifiMacAddr;
         this.macAddr = macAddr;
         this.bluetoothAddr = bluetoothAddr;
+        this.cpuserial = cpuserial;
     }
 
     public String getSerialNO() {
@@ -59,6 +61,14 @@ public class CheckInfo {
         this.bluetoothAddr = bluetoothAddr;
     }
 
+    public String getCpuserial() {
+        return cpuserial;
+    }
+
+    public void setCpuserial(String cpuserial) {
+        this.cpuserial = cpuserial;
+    }
+
     @Override
     public String toString() {
         return "CheckInfo{" +
@@ -66,6 +76,7 @@ public class CheckInfo {
                 ", wifiMacAddr='" + wifiMacAddr + '\'' +
                 ", macAddr='" + macAddr + '\'' +
                 ", bluetoothAddr='" + bluetoothAddr + '\'' +
+                ", cpuserial='" + cpuserial + '\'' +
                 '}';
     }
 }
