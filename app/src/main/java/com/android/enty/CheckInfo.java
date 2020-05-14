@@ -16,16 +16,18 @@ public class CheckInfo {
     private String wifiMacAddr="";
     private String macAddr="";
     private String bluetoothAddr="";
+    private String fingerprint="";
     private String cpuserial="";
 
     public CheckInfo() {
     }
 
-    public CheckInfo(String serialNO, String wifiMacAddr, String macAddr, String bluetoothAddr, String cpuserial) {
+    public CheckInfo(String serialNO, String wifiMacAddr, String macAddr, String bluetoothAddr, String fingerprint, String cpuserial) {
         this.serialNO = serialNO;
         this.wifiMacAddr = wifiMacAddr;
         this.macAddr = macAddr;
         this.bluetoothAddr = bluetoothAddr;
+        this.fingerprint = fingerprint;
         this.cpuserial = cpuserial;
     }
 
@@ -67,6 +69,14 @@ public class CheckInfo {
 
     public void setCpuserial(String cpuserial) {
         this.cpuserial = cpuserial;
+    }
+
+    public String getFingerprint() {
+        return fingerprint;
+    }
+
+    public void setFingerprint(String fingerprint) {
+        this.fingerprint = fingerprint;
     }
 
     @Override

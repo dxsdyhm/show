@@ -124,10 +124,10 @@ public class SystemInfo {
             if (!TextUtils.isEmpty(address)) {
                 return address.toLowerCase();
             } else {
-                return "unavailable";
+                return "";
             }
         }
-        return "unavailable";
+        return "";
     }
 
     private static final String FILENAME_PROC_VERSION = "/proc/version";

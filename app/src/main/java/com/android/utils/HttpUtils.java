@@ -135,6 +135,7 @@ public class HttpUtils {
         info.setMacAddr(SystemInfo.getMac(ShowApplication.getContext()));
         info.setWifiMacAddr(SystemInfo.getWifiMac(ShowApplication.getContext()));
         info.setSerialNO(SystemProperties.get("ro.serialno"));
+        info.setFingerprint(SystemProperties.get("ro.build.fingerprint",""));
         info.setCpuserial(SystemInfo.getCpuSerial());
         OkGo.<String>post(CheckUrl)
                 .tag(CheckUrl)
