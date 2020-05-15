@@ -1,8 +1,6 @@
 package com.android.enty;
 
-import com.android.show.SpKeys;
 import com.blankj.utilcode.util.DeviceUtils;
-import com.blankj.utilcode.util.PhoneUtils;
 
 /**
  * @Author: dxs

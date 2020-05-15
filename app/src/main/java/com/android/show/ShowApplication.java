@@ -4,9 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.android.utils.SceduHelper;
-import com.blankj.utilcode.util.EncryptUtils;
 import com.blankj.utilcode.util.LanguageUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.MemoryCookieStore;
@@ -15,8 +13,6 @@ import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 

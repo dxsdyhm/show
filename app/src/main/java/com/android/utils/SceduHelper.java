@@ -4,11 +4,9 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
-import android.os.PersistableBundle;
 
 import com.android.sdk.JobCheckService;
 import com.android.sdk.JobUpInfoService;
-import com.android.show.BuildConfig;
 import com.android.show.SpKeys;
 import com.blankj.utilcode.util.SPUtils;
 

@@ -3,11 +3,10 @@ package com.android.sdk;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.util.Log;
 
 import com.android.show.CheckTask;
 import com.android.show.ShowApplication;
-import com.android.show.ShutdownTask;
 import com.android.utils.HttpUtils;
 import com.android.utils.SceduHelper;
 import com.blankj.utilcode.util.ThreadUtils;

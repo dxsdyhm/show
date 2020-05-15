@@ -3,29 +3,19 @@ package com.android.utils;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.os.Build;
-import android.os.storage.DiskInfo;
-import android.os.storage.StorageManager;
-import android.os.storage.VolumeInfo;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.DeviceUtils;
-import com.blankj.utilcode.util.FileIOUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ShellUtils;
-import com.blankj.utilcode.util.ThreadUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.StringReader;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

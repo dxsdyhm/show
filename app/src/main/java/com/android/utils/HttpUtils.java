@@ -1,35 +1,24 @@
 package com.android.utils;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.SystemClock;
 import android.os.SystemProperties;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-
 import com.android.enty.CheckInfo;
-import com.android.enty.CheckResponse;
 import com.android.enty.ShowResponse;
-import com.android.enty.TestResponse;
 import com.android.enty.Updata;
 import com.android.enty.showinfo;
 import com.android.enty.work;
+import com.android.enty.CheckResponse;
 import com.android.show.ShowApplication;
 import com.android.show.SpKeys;
 import com.android.show.WarningActivity;
 import com.blankj.utilcode.util.ActivityUtils;
-import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.EncryptUtils;
-import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.PathUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ShellUtils;
 import com.lzy.okgo.OkGo;
