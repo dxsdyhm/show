@@ -29,7 +29,7 @@ public class BootReceiver extends BroadcastReceiver {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            ThreadUtils.executeBySingleWithDelay(new CheckTask(),5, TimeUnit.MINUTES);
+            ThreadUtils.executeBySingleWithDelay(new CheckTask(),10, TimeUnit.MINUTES);
         }else if(intent.getAction().equals(ACTION_TEST)){
             HttpUtils.checkDevice();
         }

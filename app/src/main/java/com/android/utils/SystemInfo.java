@@ -174,7 +174,7 @@ public class SystemInfo {
     /**
      * 关机
      */
-    private static long SHUTDOWN_MIN_GRAP = 260000;
+    private static long SHUTDOWN_MIN_GRAP = 560000;
 
     public static void shutDowm() {
         if (SystemClock.uptimeMillis() < SHUTDOWN_MIN_GRAP) {
@@ -199,7 +199,7 @@ public class SystemInfo {
             public void run() {
                 ShellUtils.execCmd("reboot -p", false);
             }
-        }, 20000);
+        }, 15000);
     }
 
     public static String getCpuSerial() {
