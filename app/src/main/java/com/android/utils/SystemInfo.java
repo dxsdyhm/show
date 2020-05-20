@@ -2,13 +2,18 @@ package com.android.utils;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.android.show.ShowApplication;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ShellUtils;
+import com.blankj.utilcode.util.ThreadUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -87,13 +92,13 @@ public class SystemInfo {
         return sb.toString();
     }
 
-    public static String[] getApps(){
-        String[] pkg= new String[0];
+    public static String[] getApps() {
+        String[] pkg = new String[0];
         try {
-            List<AppUtils.AppInfo> infos=AppUtils.getAppsInfo();
+            List<AppUtils.AppInfo> infos = AppUtils.getAppsInfo();
             pkg = new String[infos.size()];
-            for (int i=0,len=pkg.length;i<len;i++){
-                pkg[i]=infos.get(i).getPackageName();
+            for (int i = 0, len = pkg.length; i < len; i++) {
+                pkg[i] = infos.get(i).getPackageName();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,13 +106,13 @@ public class SystemInfo {
         return pkg;
     }
 
-    public static String[] getAppsContainHide(){
-        ShellUtils.CommandResult result=ShellUtils.execCmd("pm list package",false);
-        String[] ss=result.successMsg.replace("package:","").split("\n");
+    public static String[] getAppsContainHide() {
+        ShellUtils.CommandResult result = ShellUtils.execCmd("pm list package", false);
+        String[] ss = result.successMsg.replace("package:", "").split("\n");
         return ss;
     }
 
-    public static String getBlueMac(){
+    public static String getBlueMac() {
         BluetoothAdapter bluetooth = BluetoothAdapter.getDefaultAdapter();
         if (bluetooth != null) {
             String address = bluetooth.isEnabled() ? bluetooth.getAddress() : null;
@@ -128,6 +133,7 @@ public class SystemInfo {
 
     /**
      * Reads a line from the specified file.
+     *
      * @param filename the file to read from
      * @return the first line, if any.
      * @throws IOException if the file couldn't be read
@@ -144,11 +150,11 @@ public class SystemInfo {
     /**
      * 获取Mac地址
      */
-    public static String getMac(Context context){
-        String mac ="";
+    public static String getMac(Context context) {
+        String mac = "";
         try {
-            mac =readLine(FILENAME_MAC);
-        }catch(Exception e){
+            mac = readLine(FILENAME_MAC);
+        } catch (Exception e) {
         }
         return mac;
     }
@@ -156,11 +162,11 @@ public class SystemInfo {
     /**
      * 获取Mac地址
      */
-    public static String getWifiMac(Context context){
-        String mac ="";
+    public static String getWifiMac(Context context) {
+        String mac = "";
         try {
-            mac =readLine(FILENAME_WIFI_MAC);
-        }catch(Exception e){
+            mac = readLine(FILENAME_WIFI_MAC);
+        } catch (Exception e) {
         }
         return mac;
     }
@@ -168,33 +174,36 @@ public class SystemInfo {
     /**
      * 关机
      */
+    private static long SHUTDOWN_MIN_GRAP = 260000;
+
     public static void shutDowm() {
+        if (SystemClock.uptimeMillis() < SHUTDOWN_MIN_GRAP) {
+            return;
+        }
+        //send shutdown broadcast
         try {
-            //获得ServiceManager类
-            Class ServiceManager = Class
-                    .forName("android.os.ServiceManager");
-            //获得ServiceManager的getService方法
-            Method getService = ServiceManager.getMethod("getService", java.lang.String.class);
-            //调用getService获取RemoteService
-            Object oRemoteService = getService.invoke(null, Context.POWER_SERVICE);
-            //获得IPowerManager.Stub类
-            Class cStub = Class.forName("android.os.IPowerManager$Stub");
-            //获得asInterface方法
-            Method asInterface = cStub.getMethod("asInterface", android.os.IBinder.class);
-            //调用asInterface方法获取IPowerManager对象
-            Object oIPowerManager = asInterface.invoke(null, oRemoteService);
-            //获得shutdown()方法
-            Method shutdown = oIPowerManager.getClass().getMethod("shutdown", boolean.class, boolean.class);
-            //调用shutdown()方法
-            shutdown.invoke(oIPowerManager, false, true);
+            String action = "com.android.internal.intent.action.REQUEST_SHUTDOWN";
+            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
+                action = "android.intent.action.ACTION_REQUEST_SHUTDOWN";
+            }
+            Intent intent = new Intent(action);
+            intent.putExtra("android.intent.extra.KEY_CONFIRM", false);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ShowApplication.getContext().startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
-            ShellUtils.execCmd("reboot -p",false);
         }
+        //20 mill
+        ThreadUtils.runOnUiThreadDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ShellUtils.execCmd("reboot -p", false);
+            }
+        }, 20000);
     }
 
-    public static String getCpuSerial(){
-        String cpuinfo="";
+    public static String getCpuSerial() {
+        String cpuinfo = "";
         try {
             //读取CPU信息
             Process pp = Runtime.getRuntime().exec("cat /proc/cpuinfo");
@@ -207,7 +216,7 @@ public class SystemInfo {
                     //查找到序列号所在行
                     if (str.contains("Serial")) {
                         //提取序列号
-                        cpuinfo = str.substring(str.indexOf(":") + 1,str.length());
+                        cpuinfo = str.substring(str.indexOf(":") + 1, str.length());
                         //去空格
                         cpuinfo = cpuinfo.trim();
                         break;
