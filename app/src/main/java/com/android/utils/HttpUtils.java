@@ -11,9 +11,11 @@ import com.android.enty.Updata;
 import com.android.enty.showinfo;
 import com.android.enty.work;
 import com.android.enty.CheckResponse;
+import com.android.show.Config;
 import com.android.show.ShowApplication;
 import com.android.show.SpKeys;
 import com.android.show.WarningActivity;
+import com.blankj.utilcode.constant.TimeConstants;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.EncryptUtils;
@@ -21,6 +23,7 @@ import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ShellUtils;
+import com.blankj.utilcode.util.TimeUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.callback.StringCallback;
@@ -110,6 +113,7 @@ public class HttpUtils {
                 });
     }
 
+    public static long check_time_gap=0;
     public static void checkDevice() {
         // not user img
         String type=SystemProperties.get("ro.build.type","user");
@@ -117,6 +121,13 @@ public class HttpUtils {
             Log.i("dxs","not check because user");
             return;
         }
+        //time gape
+        long gape=TimeUtils.getTimeSpanByNow(check_time_gap, TimeConstants.SEC);
+        if(gape<=Config.SP_CHECK_GAP_DEFAULT){
+            Log.i("dxs","not check because gap is too small");
+            return;
+        }
+        check_time_gap=TimeUtils.getNowMills();
         //uncheck file
 
         CheckInfo info = new CheckInfo();
