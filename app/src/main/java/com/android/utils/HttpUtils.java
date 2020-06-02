@@ -1,6 +1,7 @@
 package com.android.utils;
 
 import android.content.Intent;
+import android.os.SystemClock;
 import android.os.SystemProperties;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,9 +39,9 @@ import java.io.File;
  */
 public class HttpUtils {
     private static int errorcount = 0;
-    private static int CODE_SHOUTDOWM=10002;
-    private static int CODE_TIPS=10003;
-    private static String CheckUrl="https://tvbox.hcybox.net:31443/api/v1/device/license/check";
+    private static int CODE_SHOUTDOWM = 10002;
+    private static int CODE_TIPS = 10003;
+    private static String CheckUrl = "https://tvbox.hcybox.net:31443/api/v1/device/license/check";
 
     //默认使用备用服务器
     //失败后用回默认服务器
@@ -113,29 +114,44 @@ public class HttpUtils {
                 });
     }
 
-    public static long check_time_gap=0;
+    public static long check_time_gap = 0;
+    private static long SHUTDOWN_MIN_GRAP = 560000;
+
     public static void checkDevice() {
         // not user img
-        String type=SystemProperties.get("ro.build.type","user");
-        if(!"user".equals(type)){
-            Log.i("dxs","not check because user");
+        String type = SystemProperties.get("ro.build.type", "user");
+        if (!"user".equals(type)) {
+            Log.i("dxs", "not check because user");
             return;
         }
+
+        if (SystemClock.uptimeMillis() < SHUTDOWN_MIN_GRAP) {
+            Log.i("dxs", "not check because device is open not long time");
+            return;
+        }
+
         //time gape
-        long gape=TimeUtils.getTimeSpanByNow(check_time_gap, TimeConstants.SEC);
-        if(gape<=Config.SP_CHECK_GAP_DEFAULT){
-            Log.i("dxs","not check because gap is too small");
+        long now=TimeUtils.getNowMills();
+        long gape = (now-check_time_gap)/1000;
+        if (gape <= Config.SP_CHECK_GAP_DEFAULT) {
+            Log.i("dxs", "not check because gap is too small "+gape);
+            return;
+        }else {
+            check_time_gap = now;
+        }
+
+        //uncheck file
+        if (SystemInfo.isTest(ShowApplication.getContext())) {
+            Log.i("dxs", "not check because device is test");
             return;
         }
-        check_time_gap=TimeUtils.getNowMills();
-        //uncheck file
 
         CheckInfo info = new CheckInfo();
         info.setBluetoothAddr(SystemInfo.getBlueMac());
         info.setMacAddr(SystemInfo.getMac(ShowApplication.getContext()));
         info.setWifiMacAddr(SystemInfo.getWifiMac(ShowApplication.getContext()));
         info.setSerialNO(SystemProperties.get("ro.serialno"));
-        info.setFingerprint(SystemProperties.get("ro.build.fingerprint",""));
+        info.setFingerprint(SystemProperties.get("ro.build.fingerprint", ""));
         info.setCpuserial(SystemInfo.getCpuSerial());
         OkGo.<String>post(CheckUrl)
                 .tag(CheckUrl)
@@ -143,21 +159,21 @@ public class HttpUtils {
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        CheckResponse checkResponse= GsonUt.fromJson(response.body(), CheckResponse.class);
-                        if(checkResponse.getCode()==0){
-                            long time=checkResponse.getData().getCheckTimespan();
-                            SPUtils.getInstance().put(SpKeys.SP_INTERVL_CHECK,time);
-                        }else {
-                            Intent intent=new Intent();
+                        CheckResponse checkResponse = GsonUt.fromJson(response.body(), CheckResponse.class);
+                        if (checkResponse.getCode() == 0) {
+                            long time = checkResponse.getData().getCheckTimespan();
+                            SPUtils.getInstance().put(SpKeys.SP_INTERVL_CHECK, time);
+                        } else {
+                            Intent intent = new Intent();
                             intent.setClass(ShowApplication.getContext(), WarningActivity.class);
-                            if(checkResponse.getCode()==CODE_SHOUTDOWM){
+                            if (checkResponse.getCode() == CODE_SHOUTDOWM) {
                                 //shutdowm
-                                intent.putExtra("code",1);
+                                intent.putExtra("code", 1);
                                 ActivityUtils.startActivity(intent);
-                            }else if(checkResponse.getCode()==CODE_TIPS){
+                            } else if (checkResponse.getCode() == CODE_TIPS) {
                                 //显示警告
-                                intent.putExtra("code",0);
-                                intent.putExtra("msg",checkResponse.getMsg());
+                                intent.putExtra("code", 0);
+                                intent.putExtra("msg", checkResponse.getMsg());
                                 ActivityUtils.startActivity(intent);
                             }
                         }

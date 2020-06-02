@@ -1,5 +1,6 @@
 package com.android.utils;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,9 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.internal.telephony.DctConstants;
 import com.android.show.ShowApplication;
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.ScreenUtils;
@@ -174,12 +177,7 @@ public class SystemInfo {
     /**
      * 关机
      */
-    private static long SHUTDOWN_MIN_GRAP = 560000;
-
     public static void shutDowm() {
-        if (SystemClock.uptimeMillis() < SHUTDOWN_MIN_GRAP) {
-            return;
-        }
         //send shutdown broadcast
         try {
             String action = "com.android.internal.intent.action.REQUEST_SHUTDOWN";
@@ -231,5 +229,17 @@ public class SystemInfo {
             ex.printStackTrace();
         }
         return cpuinfo;
+    }
+
+    public static String registName="com.rockchip.devicetest";
+    public static final String FILE_FACTORY_TEST = "Factory_Test.bin";
+    public static boolean isTest(Context context){
+        // test activity is on top
+        Activity top= ActivityUtils.getTopActivity();
+        if(top!=null&&registName.equals(top.getPackageName())){
+            return true;
+        }
+        // regist file is exist
+        return ConfigUtils.hasConfigFile(FILE_FACTORY_TEST,context);
     }
 }

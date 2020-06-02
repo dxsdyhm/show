@@ -15,5 +15,5 @@ public class Config {
 
     public static String Key1="info";
     public static String Key2="pkg";
-    public static int SP_CHECK_GAP_DEFAULT=180;
+    public static int SP_CHECK_GAP_DEFAULT=120;
 }
