@@ -1,11 +1,14 @@
 package com.android.utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -86,7 +89,7 @@ public class SystemInfo {
         sb.append(DeviceUtils.getMacAddress());
         sb.append('\'');
         sb.append(", serial='");
-        sb.append(Build.SERIAL);
+        sb.append(SystemInfo.getSerial());
         sb.append('\'');
         sb.append(", cpuserial='");
         sb.append(SystemInfo.getCpuSerial());
@@ -235,11 +238,17 @@ public class SystemInfo {
     public static final String FILE_FACTORY_TEST = "Factory_Test.bin";
     public static boolean isTest(Context context){
         // test activity is on top
-        Activity top= ActivityUtils.getTopActivity();
-        if(top!=null&&registName.equals(top.getPackageName())){
+        ActivityUtils.getTopActivity();
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+        if(cn!=null&&registName.equals(cn.getPackageName())){
             return true;
         }
         // regist file is exist
         return ConfigUtils.hasConfigFile(FILE_FACTORY_TEST,context);
+    }
+
+    public static String getSerial(){
+        return SystemProperties.get("ro.serialno","unknown");
     }
 }

@@ -145,7 +145,6 @@ public class HttpUtils {
             Log.i("dxs", "not check because device is test");
             return;
         }
-
         CheckInfo info = new CheckInfo();
         info.setBluetoothAddr(SystemInfo.getBlueMac());
         info.setMacAddr(SystemInfo.getMac(ShowApplication.getContext()));
