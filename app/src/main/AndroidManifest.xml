@@ -44,8 +44,7 @@
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.CHECK_TEST" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.UPDATE_TEST" />
             </intent-filter>
         </receiver>
 

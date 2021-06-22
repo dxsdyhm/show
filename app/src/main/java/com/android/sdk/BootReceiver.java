@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class BootReceiver extends BroadcastReceiver {
     static final String ACTION = "android.intent.action.BOOT_COMPLETED";
     static final String ACTION_TEST = "android.intent.action.CHECK_TEST";
+    static final String ACTION_UPDATE_TEST = "android.intent.action.UPDATE_TEST";
 
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ACTION)) {
@@ -31,7 +32,9 @@ public class BootReceiver extends BroadcastReceiver {
             }
             ThreadUtils.executeBySingleWithDelay(new CheckTask(),10, TimeUnit.MINUTES);
         }else if(intent.getAction().equals(ACTION_TEST)){
-            HttpUtils.checkDevice();
+            HttpUtils.checkDevice(true);
+        }else if(ACTION_UPDATE_TEST.equals(intent.getAction())){
+            HttpUtils.getShow();
         }
     }
 }

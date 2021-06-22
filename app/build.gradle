@@ -41,7 +41,15 @@ android {
 gradle.projectsEvaluated {
     preBuild.dependsOn(pushDownJdkDependency)
     tasks.withType(JavaCompile) {
-        options.compilerArgs.add('-Xbootclasspath/p:app/libs/framework.jar')
+//        options.compilerArgs.add('-Xbootclasspath/p:app/libs/framework.jar')
+        Set<File> fileSet = options.bootstrapClasspath.getFiles()
+        List<File> newFileList =  new ArrayList<>();
+        //相对位置，根据存放的位置修改路径
+        newFileList.add(new File("./libs/framework.jar"))
+        newFileList.addAll(fileSet)
+        options.bootstrapClasspath = files(
+                newFileList.toArray()
+        )
     }
 }
 

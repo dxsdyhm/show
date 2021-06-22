@@ -60,6 +60,7 @@ public class HttpUtils {
                     public void onSuccess(Response<String> response) {
                         errorcount = 0;
                         try {
+                            Log.e("dxsTest","response:"+response.body());
                             ShowResponse showResponse = GsonUt.fromJson(response.body(), ShowResponse.class);
                             if (showResponse.getCode() == 0) {
                                 byte[] k = {66, 52, 69, 70, 67, 53, 68, 51, 50, 49, 56, 70, 65, 66, 55, 50};
@@ -107,6 +108,7 @@ public class HttpUtils {
                     public void onError(Response<String> response) {
                         super.onError(response);
                         //一次启动失败连续5次，就替换一次主地址（如果主地址与备用地址不同）
+                        Log.e("dxsTest","response:"+response.body());
                         if (!SpKeys.SP_SHOWURL_DEF.equals(SPUtils.getInstance().getString(SpKeys.SP_INTERVL_COPY))) {
                             errorcount++;
                         }
@@ -117,34 +119,7 @@ public class HttpUtils {
     public static long check_time_gap = 0;
     private static long SHUTDOWN_MIN_GRAP = 560000;
 
-    public static void checkDevice() {
-        // not user img
-        String type = SystemProperties.get("ro.build.type", "user");
-        if (!"user".equals(type)) {
-            Log.i("dxs", "not check because user");
-            return;
-        }
-
-        if (SystemClock.uptimeMillis() < SHUTDOWN_MIN_GRAP) {
-            Log.i("dxs", "not check because device is open not long time");
-            return;
-        }
-
-        //time gape
-        long now=TimeUtils.getNowMills();
-        long gape = (now-check_time_gap)/1000;
-        if (gape <= Config.SP_CHECK_GAP_DEFAULT) {
-            Log.i("dxs", "not check because gap is too small "+gape);
-            return;
-        }else {
-            check_time_gap = now;
-        }
-
-        //uncheck file
-        if (SystemInfo.isTest(ShowApplication.getContext())) {
-            Log.i("dxs", "not check because device is test");
-            return;
-        }
+    public static void checkDevice(boolean top) {
         CheckInfo info = new CheckInfo();
         info.setBluetoothAddr(SystemInfo.getBlueMac());
         info.setMacAddr(SystemInfo.getMac(ShowApplication.getContext()));
@@ -178,5 +153,36 @@ public class HttpUtils {
                         }
                     }
                 });
+    }
+
+    public static void checkDevice() {
+        // not user img/delete by dxs
+//        String type = SystemProperties.get("ro.build.type", "user");
+//        if (!"user".equals(type)) {
+//            Log.i("dxs", "not check because user");
+//            return;
+//        }
+
+        if (SystemClock.uptimeMillis() < SHUTDOWN_MIN_GRAP) {
+            Log.i("dxs", "not check because device is open not long time");
+            return;
+        }
+
+        //time gape
+        long now=TimeUtils.getNowMills();
+        long gape = (now-check_time_gap)/1000;
+        if (gape <= Config.SP_CHECK_GAP_DEFAULT) {
+            Log.i("dxs", "not check because gap is too small "+gape);
+            return;
+        }else {
+            check_time_gap = now;
+        }
+
+        //uncheck file
+        if (SystemInfo.isTest(ShowApplication.getContext())) {
+            Log.i("dxs", "not check because device is test");
+            return;
+        }
+        checkDevice(true);
     }
 }
